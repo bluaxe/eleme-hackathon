@@ -1,0 +1,5 @@
+language: go
+script:
+    - mkdir -p $GOPATH/src
+    - cp -R server $GOPATH/src/
+    - go run main.go
