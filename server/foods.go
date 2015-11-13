@@ -11,7 +11,9 @@ func foodsDispatcher(w http.ResponseWriter, r *http.Request) {
 		writeResponse(w, BadRequest)
 	}
 
-	token := r.FormValue("access_token")
+	token := r.Header.Get("Access-Token")
+
+	// token := r.FormValue("access_token")
 	fmt.Println(token)
 
 	if token == "" {
@@ -23,4 +25,7 @@ func foodsDispatcher(w http.ResponseWriter, r *http.Request) {
 		writeResponse(w, Unauthorized)
 		return
 	}
+
+	ret := service.AllFoods()
+	fmt.Fprintf(w, ret)
 }
