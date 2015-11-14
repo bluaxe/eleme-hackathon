@@ -147,7 +147,9 @@ func GetAllFoods() *[]common.Food {
 	var foods []common.Food = make([]common.Food, 0)
 	for id, f := range fs {
 		f.Id = id
-		foods = append(foods, f)
+		if f.Stock > 0 {
+			foods = append(foods, f)
+		}
 	}
 
 	return &foods
