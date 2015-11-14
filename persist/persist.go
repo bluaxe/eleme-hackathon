@@ -9,10 +9,16 @@ import (
 	"os"
 )
 
-// TODO persist pool
-
 var default_dsn = getDefaultDsn()
 var s sqls = initSQL()
+
+var default_db = func() *sql.DB {
+	db, err := sql.Open("mysql", default_dsn)
+	if err != nil {
+		panic(err)
+	}
+	return db
+}()
 
 func getDefaultDsn() string {
 	host := os.Getenv("DB_HOST")
@@ -27,15 +33,11 @@ func getDefaultDsn() string {
 }
 
 func getDB() *sql.DB {
-	db, err := sql.Open("mysql", default_dsn)
-	if err != nil {
-		panic(err)
-	}
-	return db
+	return default_db
 }
 
 func releaseDB(db *sql.DB) {
-	db.Close()
+	// db.Close()
 }
 
 func List10User() string {
