@@ -26,7 +26,6 @@ var authFail = &Response{
 }
 
 func loginDispatcher(w http.ResponseWriter, r *http.Request) {
-	fmt.Println("got a request !")
 	if r.Method != "POST" {
 		fmt.Println("Not Post!")
 		writeResponse(w, BadRequest)
@@ -41,7 +40,7 @@ func loginDispatcher(w http.ResponseWriter, r *http.Request) {
 
 	body, _ := ioutil.ReadAll(r.Body)
 	defer r.Body.Close()
-	fmt.Println(string(body))
+	// fmt.Println(string(body))
 
 	var req request
 	if err := json.Unmarshal(body, &req); err != nil {
@@ -50,7 +49,7 @@ func loginDispatcher(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	fmt.Printf("%s:%s\n", req.Username, req.Password)
+	fmt.Printf("Got Login request %s:%s\n", req.Username, req.Password)
 
 	id, token, ok := service.Login(req.Username, req.Password)
 	if !ok {

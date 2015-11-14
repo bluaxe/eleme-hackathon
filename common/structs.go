@@ -11,3 +11,8 @@ type Food struct {
 	Stock int `json:"stock"`
 	Price int `json:"price"`
 }
+
+type CartFood struct {
+	Id  int
+	Num int
+}
