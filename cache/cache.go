@@ -14,6 +14,14 @@ func init() {
 	addr = fmt.Sprintf("%s:%s", host, port)
 }
 
+func SeekMaster() {
+	ll := NewLock("seek master")
+	if ll.Get() {
+		defer ll.Release()
+		fmt.Println("I am master!")
+	}
+}
+
 func getCon() redis.Conn {
 	c, err := redis.Dial("tcp", addr)
 	if err != nil {

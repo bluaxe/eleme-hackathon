@@ -12,8 +12,10 @@ func foodsDispatcher(w http.ResponseWriter, r *http.Request) {
 	}
 
 	token := r.Header.Get("Access-Token")
+	if token == "" {
+		token = r.FormValue("access_token")
+	}
 
-	// token := r.FormValue("access_token")
 	fmt.Println(token)
 
 	if token == "" {

@@ -1,10 +1,21 @@
 package main
 
 import (
+	"cache"
 	"fmt"
 	"os"
 	"server"
+	"service"
 )
+
+type initializer func()
+
+var jobs map[string]initializer = make(map[string]initializer)
+
+func init() {
+	jobs["cache_seek_master"] = cache.SeekMaster
+	jobs["cache_load_foods"] = service.InitFoodsFromPersist
+}
 
 func main() {
 	host := os.Getenv("APP_HOST")
@@ -16,5 +27,10 @@ func main() {
 		port = "8080"
 	}
 	addr := fmt.Sprintf("%s:%s", host, port)
+
+	for _, v := range jobs {
+		go v()
+	}
+
 	server.Start(addr)
 }
