@@ -14,6 +14,8 @@ type keys struct {
 	FOOD_PRICE_KEY string
 	CART_KEY_CHK   string
 	CART_KEY       string
+	ORDER_ID_KEY   string
+	USER_ORDERS    string
 }
 
 var k keys = InitKeys()
@@ -28,6 +30,7 @@ func InitKeys() keys {
 	k.FOOD_PRICE_KEY = `fprice`
 	k.CART_KEY = `bas:%s`
 	k.CART_KEY_CHK = `cart:%s`
+	k.USER_ORDERS = `uorder:%d`
 	return k
 }
 
@@ -47,4 +50,8 @@ func getCartKey(cart_id string) string {
 
 func getCartKeyCHK(cart_id string) string {
 	return fmt.Sprintf(k.CART_KEY_CHK, cart_id)
+}
+
+func getUserOrderKey(user_id int) string {
+	return fmt.Sprintf(k.USER_ORDERS, user_id)
 }

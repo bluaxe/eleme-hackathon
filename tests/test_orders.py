@@ -84,6 +84,7 @@ def test_make_order(url, token, make_order, price_of):
     # make order success
     res = make_order(token)
     assert res.status_code == 200
+    print res.json()
     assert len(res.json()["id"]) > 0
 
     # verify query return the same order

@@ -1,6 +1,7 @@
 package cache
 
 import (
+	"common"
 	"fmt"
 	"github.com/garyburd/redigo/redis"
 )
@@ -8,6 +9,8 @@ import (
 var tokenExpire = 180 //3 * 60 * 60 // 3 Hours
 
 func SaveToken(token string, username string, id int) {
+	defer common.RecoverAndPrint("Save Token Failed!")
+
 	c := getCon()
 	defer c.Close()
 
@@ -20,12 +23,8 @@ func SaveToken(token string, username string, id int) {
 }
 
 func GetToken(token string) (id int, ok bool) {
-	defer func() {
-		if r := recover(); r != nil {
-			fmt.Println(r)
-			ok = false
-		}
-	}()
+	defer common.RecoverAndPrint("Get Token Failed!")
+
 	c := getCon()
 	defer c.Close()
 

@@ -1,5 +1,9 @@
 package common
 
+import (
+	"fmt"
+)
+
 type User struct {
 	Id     int
 	Name   string
@@ -13,6 +17,19 @@ type Food struct {
 }
 
 type CartFood struct {
-	Id  int
-	Num int
+	Id  int `json:"food_id"`
+	Num int `json:"count"`
+}
+
+type Order struct {
+	Idstring string     `json:"id"`
+	Id       int        `json:"-"`
+	Foods    []CartFood `json:"items"`
+	Total    int        `json:"total"`
+}
+
+func RecoverAndPrint(msg string) {
+	if r := recover(); r != nil {
+		fmt.Println(msg, r)
+	}
 }
