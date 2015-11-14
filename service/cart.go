@@ -36,6 +36,10 @@ func AddFood(fid, count, uid int, cid string) string {
 		return "food_not_exist"
 	}
 
+	if count < 1 {
+		return "ok"
+	}
+
 	foods := cache.GetCartFoods(cid)
 	// fmt.Println("cart foods len", len(*foods))
 	sum := 0
