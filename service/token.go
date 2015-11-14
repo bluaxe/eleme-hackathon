@@ -7,7 +7,7 @@ import (
 )
 
 func newToken() string {
-	b := make([]byte, 16)
+	b := make([]byte, 6)
 	rand.Read(b)
 	return fmt.Sprintf("%x", b)
 }

@@ -11,7 +11,7 @@ func saveCart(uid int, cid string) {
 }
 
 func NewCart(id int) string {
-	b := make([]byte, 16)
+	b := make([]byte, 6)
 	rand.Read(b)
 	cart_id := fmt.Sprintf("%x", b)
 	go saveCart(id, cart_id)
