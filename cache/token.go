@@ -6,7 +6,7 @@ import (
 	"github.com/garyburd/redigo/redis"
 )
 
-var tokenExpire = 180 //3 * 60 * 60 // 3 Hours
+var tokenExpire = 60 //3 * 60 * 60 // 3 Hours
 
 func SaveToken(token string, username string, id int) {
 	defer common.RecoverAndPrint("Save Token Failed!")
@@ -31,6 +31,9 @@ func GetToken(token string) (id int, ok bool) {
 	key := fmt.Sprintf(k.TOKEN_KEY, token)
 
 	id, err := redis.Int(c.Do("get", key))
+	if err == redis.ErrNil {
+		return 0, false
+	}
 	if err != nil {
 		panic(err)
 	} else {

@@ -38,6 +38,9 @@ func GetCartUser(cid string) (id int) {
 
 	key := getCartKeyCHK(cid)
 	id, err := redis.Int(c.Do("get", key))
+	if err == redis.ErrNil {
+		return -1
+	}
 	if err != nil {
 		panic(err)
 	}
