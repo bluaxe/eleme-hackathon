@@ -4,14 +4,37 @@ import (
 	"fmt"
 	"github.com/garyburd/redigo/redis"
 	"os"
+	"time"
 )
 
 var addr string
+
+var pool *redis.Pool
+
+func newPool(addr string) *redis.Pool {
+	return &redis.Pool{
+		MaxIdle:     10,
+		MaxActive:   0,
+		IdleTimeout: 10 * time.Second,
+		Dial: func() (redis.Conn, error) {
+			c, err := redis.Dial("tcp", addr)
+			if err != nil {
+				return nil, err
+			}
+			return c, err
+		},
+		TestOnBorrow: func(c redis.Conn, t time.Time) error {
+			_, err := c.Do("PING")
+			return err
+		},
+	}
+}
 
 func init() {
 	host := os.Getenv("REDIS_HOST")
 	port := os.Getenv("REDIS_PORT")
 	addr = fmt.Sprintf("%s:%s", host, port)
+	pool = newPool(addr)
 }
 
 func SeekMaster() {
@@ -23,11 +46,7 @@ func SeekMaster() {
 }
 
 func getCon() redis.Conn {
-	c, err := redis.Dial("tcp", addr)
-	if err != nil {
-		panic(err)
-	}
-	return c
+	return pool.Get()
 }
 
 func releaseCon(c redis.Conn) {
