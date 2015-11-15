@@ -59,6 +59,18 @@ func GetUserOrders(uid int) *[]common.Order {
 	return cache.GetUserOrders(uid)
 }
 
+func GetAllOrders() *[]common.Order {
+	uids := cache.GetAllOrderUid()
+	var order_list []common.Order
+	for _, id := range *uids {
+		var orders = *cache.GetUserOrders(id)
+		for _, order := range orders {
+			order_list = append(order_list, order)
+		}
+	}
+	return &order_list
+}
+
 func SaveOrder(order *common.Order, uid int) {
 	cache.SaveOrder(order, uid)
 }

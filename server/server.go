@@ -14,6 +14,7 @@ func Start(addr string) {
 	http.HandleFunc("/carts", cartsDispatcher)
 	http.HandleFunc("/carts/", addFood)
 	http.HandleFunc("/orders", ordersDispatcher)
+	http.HandleFunc("/admin/orders", adminOrdersDispatcher)
 	err := http.ListenAndServe(addr, nil)
 	if err != nil {
 		fmt.Println(err)

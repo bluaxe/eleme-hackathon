@@ -51,6 +51,26 @@ func SaveOrder(order *common.Order, uid int) {
 	}
 }
 
+func GetAllOrderUid() *[]int {
+	defer common.RecoverAndPrint("Get All Order Key Error")
+
+	c := getCon()
+	defer releaseCon(c)
+
+	keys, err := redis.Strings(c.Do("keys", "uorder:*"))
+	if err != nil {
+		panic(err)
+	}
+	var ids []int
+	for _, key := range keys {
+		var id int
+		fmt.Sscanf(key, "uorder:%d", &id)
+		fmt.Printf("key:%s id:%d\n", key, id)
+		ids = append(ids, id)
+	}
+	return &ids
+}
+
 func GetUserOrderLen(uid int) int {
 	defer common.RecoverAndPrint("Get User Order Len")
 	c := getCon()
