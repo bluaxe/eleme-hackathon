@@ -37,9 +37,9 @@ func DoOrder(order *common.Order, uid int) (string, bool) {
 	for _, food := range order.Foods {
 		res := cache.FetchFood(food.Id, food.Num)
 		if res < 0 {
-			cache.FetchFood(food.Id, -food.Num)
+			go cache.FetchFood(food.Id, -food.Num)
 			for id, cnt := range done {
-				cache.FetchFood(id, -cnt)
+				go cache.FetchFood(id, -cnt)
 			}
 			fetchall = false
 			break

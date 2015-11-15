@@ -19,7 +19,7 @@ func NewCart(id int) string {
 }
 
 func DestroyCart(cart_id string) {
-
+	cache.DelCart(cart_id)
 }
 
 func AddFood(fid, count, uid int, cid string) string {
@@ -36,8 +36,8 @@ func AddFood(fid, count, uid int, cid string) string {
 		return "food_not_exist"
 	}
 
-	if count < 1 {
-		return "ok"
+	if count > 3 {
+		return "cart_more_than_three"
 	}
 
 	foods := cache.GetCartFoods(cid)

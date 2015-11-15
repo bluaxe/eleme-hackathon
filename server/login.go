@@ -1,11 +1,13 @@
 package server
 
 import (
+	"common"
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
 	"net/http"
 	"service"
+	"time"
 )
 
 type responseOK struct {
@@ -26,6 +28,9 @@ var authFail = &Response{
 }
 
 func loginDispatcher(w http.ResponseWriter, r *http.Request) {
+	now_t := time.Now()
+	defer common.LogTime(now_t, r.URL.String())
+
 	if r.Method != "POST" {
 		fmt.Println("Not Post!")
 		writeResponse(w, BadRequest)

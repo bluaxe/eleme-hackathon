@@ -2,6 +2,7 @@ package common
 
 import (
 	"fmt"
+	"time"
 )
 
 type User struct {
@@ -32,4 +33,11 @@ func RecoverAndPrint(msg string) {
 	if r := recover(); r != nil {
 		fmt.Println(msg, r)
 	}
+}
+
+func LogTime(t time.Time, msg string) {
+	now_t := time.Now()
+	dur := now_t.Sub(t)
+	ms := dur.Nanoseconds() / 1000000
+	fmt.Printf("[%dms] %s\n", ms, msg)
 }

@@ -6,7 +6,7 @@ import (
 	"github.com/garyburd/redigo/redis"
 )
 
-var cart_expire = 60 * 60 // 1 Hour
+var cart_expire = 60 // 1 Hour
 
 func SaveCart(uid int, cart_id string) {
 	defer func() {
@@ -23,6 +23,17 @@ func SaveCart(uid int, cart_id string) {
 	if err != nil {
 		panic(err)
 	}
+}
+
+func DelCart(cart_id string) {
+	defer common.RecoverAndPrint("Del Cart Error")
+	keychk := getCartKeyCHK(cart_id)
+	key := getCartKey(cart_id)
+
+	c := getCon()
+	defer releaseCon(c)
+	c.Do("del", key)
+	c.Do("del", keychk)
 }
 
 func GetCartUser(cid string) (id int) {

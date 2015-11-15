@@ -1,12 +1,14 @@
 package server
 
 import (
+	"common"
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
 	"net/http"
 	"service"
 	"strings"
+	"time"
 )
 
 type newCartID struct {
@@ -19,6 +21,9 @@ type request_add_food struct {
 }
 
 func cartsDispatcher(w http.ResponseWriter, r *http.Request) {
+	now_t := time.Now()
+	defer common.LogTime(now_t, r.URL.String())
+
 	if r.Method == "GET" {
 		writeResponse(w, BadRequest)
 		return
@@ -43,6 +48,9 @@ func cartsDispatcher(w http.ResponseWriter, r *http.Request) {
 }
 
 func addFood(w http.ResponseWriter, r *http.Request) {
+	now_t := time.Now()
+	defer common.LogTime(now_t, r.URL.String())
+
 	defer func() {
 		if r := recover(); r != nil {
 			fmt.Println("Panic in Server Add Food", r)

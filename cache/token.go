@@ -6,7 +6,7 @@ import (
 	"github.com/garyburd/redigo/redis"
 )
 
-var tokenExpire = 60 //3 * 60 * 60 // 3 Hours
+var tokenExpire = 30 //3 * 60 * 60 // 3 Hours
 
 func SaveToken(token string, username string, id int) {
 	defer common.RecoverAndPrint("Save Token Failed!")
