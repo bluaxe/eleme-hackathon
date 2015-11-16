@@ -14,7 +14,7 @@ func NewCart(id int) string {
 	b := make([]byte, 6)
 	rand.Read(b)
 	cart_id := fmt.Sprintf("%x", b)
-	go saveCart(id, cart_id)
+	saveCart(id, cart_id)
 	return cart_id
 }
 
@@ -51,7 +51,7 @@ func AddFood(fid, count, uid int, cid string) string {
 		return "cart_more_than_three"
 	}
 
-	go cache.CartAddFood(cid, fid, count)
+	cache.CartAddFood(cid, fid, count)
 
 	return "ok"
 }

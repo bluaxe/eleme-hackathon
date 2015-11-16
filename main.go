@@ -30,7 +30,7 @@ func main() {
 	addr := fmt.Sprintf("%s:%s", host, port)
 
 	for _, v := range jobs {
-		go v()
+		v()
 	}
 
 	server.Start(addr)

@@ -37,9 +37,9 @@ func DoOrder(order *common.Order, uid int) (string, bool) {
 	for _, food := range order.Foods {
 		res := cache.FetchFood(food.Id, food.Num)
 		if res < 0 {
-			go cache.FetchFood(food.Id, -food.Num)
+			cache.FetchFood(food.Id, -food.Num)
 			for id, cnt := range done {
-				go cache.FetchFood(id, -cnt)
+				cache.FetchFood(id, -cnt)
 			}
 			fetchall = false
 			break
@@ -51,7 +51,7 @@ func DoOrder(order *common.Order, uid int) (string, bool) {
 	}
 	order.Id = NewOrderID()
 	order.Idstring = fmt.Sprintf("%d", order.Id)
-	go SaveOrder(order, uid)
+	SaveOrder(order, uid)
 	return fmt.Sprintf("%d", order.Id), true
 }
 
