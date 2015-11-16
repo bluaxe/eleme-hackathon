@@ -2,7 +2,7 @@
 
 <!-- 1. local users to local mem  -->
 
-2. food price local mem
+<!-- 2. food price local mem -->
 
 <!-- 3. token local mem -->
 

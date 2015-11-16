@@ -16,6 +16,7 @@ type keys struct {
 	CART_KEY       string
 	ORDER_ID_KEY   string
 	USER_ORDERS    string
+	USER_TOKEN     string
 }
 
 var k keys = InitKeys()
@@ -31,7 +32,12 @@ func InitKeys() keys {
 	k.CART_KEY = `bas:%s`
 	k.CART_KEY_CHK = `cart:%s`
 	k.USER_ORDERS = `uorder:%d`
+	k.USER_TOKEN = `ut:%d`
 	return k
+}
+
+func getUserTokenKey(uid int) string {
+	return fmt.Sprintf(k.USER_TOKEN, uid)
 }
 
 func getLockKey(key string) string {

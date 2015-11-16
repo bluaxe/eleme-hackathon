@@ -7,6 +7,8 @@ import (
 	"service"
 )
 
+var local = true
+
 func Start(addr string) {
 	http.HandleFunc("/", dispatcher)
 	http.HandleFunc("/login", loginDispatcher)
@@ -40,7 +42,13 @@ func dealRequest(w http.ResponseWriter, r *http.Request) (int, bool) {
 		writeResponse(w, Unauthorized)
 		return 0, false
 	}
-	id, ok := service.CheckToken(token)
+	var id int
+	var ok bool
+	if local {
+		id, ok = service.CheckTokenLocal(token)
+	} else {
+		id, ok = service.CheckToken(token)
+	}
 	if !ok {
 		fmt.Println("token not exist!!!!")
 		writeResponse(w, Unauthorized)

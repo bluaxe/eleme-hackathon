@@ -56,7 +56,14 @@ func loginDispatcher(w http.ResponseWriter, r *http.Request) {
 
 	fmt.Printf("Got Login request %s:%s\n", req.Username, req.Password)
 
-	id, token, ok := service.Login(req.Username, req.Password)
+	var id int
+	var token string
+	var ok bool
+	if local {
+		id, token, ok = service.LoginLocal(req.Username, req.Password)
+	} else {
+		id, token, ok = service.Login(req.Username, req.Password)
+	}
 	if !ok {
 		writeResponse(w, authFail)
 		return

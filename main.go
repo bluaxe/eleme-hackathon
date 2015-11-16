@@ -16,6 +16,7 @@ func init() {
 	jobs["cache_seek_master"] = cache.SeekMaster
 	jobs["cache_load_foods"] = service.InitFoodsFromPersist
 	jobs["mem_load_users"] = service.LoadAllUserToMem
+	jobs["mem_gen_tokens"] = service.GenerateTokens
 }
 
 func main() {

@@ -3,18 +3,18 @@ package mem
 import ()
 
 func SaveToken(token string, id int) {
-	token_map.Set(token, id)
+	token_map[token] = id
 }
 
 func GetToken(token string) (int, bool) {
-	var id int
-	ret, ok := token_map.Get(token)
+	id, ok := token_map[token]
+	return id, ok
+}
 
-	if ok {
-		id = ret.(int)
-		return id, true
-	} else {
-		return 0, false
-	}
+func UserGetToken(uid int) string {
+	return uid_token_map[uid]
+}
 
+func UserSetToken(uid int, token string) {
+	uid_token_map[uid] = token
 }
