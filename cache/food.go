@@ -154,3 +154,34 @@ func GetAllFoods() *[]common.Food {
 
 	return &foods
 }
+
+func GetAllFoodsStock() *[]common.Food {
+	defer common.RecoverAndPrint("Cache Get All Foods Stock Error!")
+
+	c := getCon()
+	defer releaseCon(c)
+
+	key := k.FOOD_STOCK_KEY
+	values, err := redis.Values(c.Do("hgetall", key))
+	if err != nil {
+		panic(err)
+	}
+	var fstocks []struct {
+		Id    int
+		Stock int
+	}
+	if err = redis.ScanSlice(values, &fstocks); err != nil {
+		panic(err)
+	}
+
+	var foods []common.Food = make([]common.Food, 0)
+
+	for _, s := range fstocks {
+		var f common.Food
+		f.Id = s.Id
+		f.Stock = s.Stock
+		foods = append(foods, f)
+	}
+
+	return &foods
+}

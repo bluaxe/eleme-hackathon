@@ -2,6 +2,7 @@ package service
 
 import (
 	"cache"
+	"common"
 	"encoding/json"
 	"fmt"
 	"persist"
@@ -13,9 +14,13 @@ var food_list = func() map[int]int {
 }()
 
 func AllFoods() string {
-	// foods := persist.GetAllFoods()
-	foods := cache.GetAllFoods()
-	ret, _ := json.Marshal(foods)
+	foods := cache.GetAllFoodsStock()
+	var fs []common.Food = make([]common.Food, 0)
+	for _, food := range *foods {
+		food.Price, _ = GetFoodPrice(food.Id)
+		fs = append(fs, food)
+	}
+	ret, _ := json.Marshal(fs)
 	return string(ret)
 }
 
