@@ -30,13 +30,6 @@ func SaveOrder(order *common.Order, uid int) {
 	c := getCon()
 	defer releaseCon(c)
 
-	total := 0
-	for _, food := range order.Foods {
-		price := GetFoodPrice(food.Id)
-		total += price * food.Num
-	}
-	order.Total = total
-
 	buf := new(bytes.Buffer)
 	enc := gob.NewEncoder(buf)
 	if err := enc.Encode(order); err != nil {

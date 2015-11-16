@@ -7,8 +7,8 @@ import (
 	"persist"
 )
 
-var food_list = func() map[int]bool {
-	var f = make(map[int]bool)
+var food_list = func() map[int]int {
+	var f = make(map[int]int)
 	return f
 }()
 
@@ -19,10 +19,15 @@ func AllFoods() string {
 	return string(ret)
 }
 
+func GetFoodPrice(food_id int) (int, bool) {
+	price, ok := food_list[food_id]
+	return price, ok
+}
+
 func InitFoodsFromPersist() {
 	foods := persist.GetAllFoods()
 	for _, food := range *foods {
-		food_list[food.Id] = true
+		food_list[food.Id] = food.Price
 	}
 
 	l := cache.NewLock("master")

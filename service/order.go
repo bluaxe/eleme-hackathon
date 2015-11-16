@@ -72,6 +72,16 @@ func GetAllOrders() *[]common.Order {
 }
 
 func SaveOrder(order *common.Order, uid int) {
+	total := 0
+	for _, food := range order.Foods {
+		price, ok := GetFoodPrice(food.Id)
+		if !ok {
+			fmt.Println("Get Food Price In Mem Failed!")
+		}
+		total += price * food.Num
+	}
+	order.Total = total
+
 	cache.SaveOrder(order, uid)
 }
 
