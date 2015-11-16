@@ -22,6 +22,7 @@ func CheckToken(token string) (int, bool) {
 	if !ok {
 		return 0, false
 	} else {
+		mem.SaveToken(token, id)
 		return id, true
 	}
 }
