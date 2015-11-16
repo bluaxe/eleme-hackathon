@@ -4,6 +4,7 @@ import (
 	"cache"
 	"crypto/rand"
 	"fmt"
+	"mem"
 )
 
 func newToken() string {
@@ -13,7 +14,11 @@ func newToken() string {
 }
 
 func CheckToken(token string) (int, bool) {
-	id, ok := cache.GetToken(token)
+	id, ok := mem.GetToken(token)
+	if ok {
+		return id, true
+	}
+	id, ok = cache.GetToken(token)
 	if !ok {
 		return 0, false
 	} else {

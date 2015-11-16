@@ -19,6 +19,7 @@ func Login(username, passwd string) (int, string, bool) {
 	if ok {
 		var token = newToken()
 		cache.SaveToken(token, username, id)
+		go mem.SaveToken(token, id)
 		return id, token, true
 	} else {
 		return 0, "", false

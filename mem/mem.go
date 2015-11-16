@@ -7,9 +7,12 @@ import (
 var user_id_map cmap.ConcurrentMap
 var user_pwd_map cmap.ConcurrentMap
 
+var token_map cmap.ConcurrentMap
+
 func init() {
 	user_id_map = cmap.New()
 	user_pwd_map = cmap.New()
+	token_map = cmap.New()
 }
 
 func Test() {
