@@ -1,5 +1,5 @@
 language: go
 script:
     - mkdir -p $GOPATH/src
-    - cp -R server persist common cache service thirdparty/* $GOPATH/src/
+    - cp -R mem server persist common cache service thirdparty/* $GOPATH/src/
     - go run main.go

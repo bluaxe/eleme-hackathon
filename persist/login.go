@@ -25,3 +25,26 @@ func Login(username, passwd string) (int, bool) {
 		return 0, false
 	}
 }
+
+func GetAllUsers() *[]common.User {
+	defer common.RecoverAndPrint("persist get all user failed.")
+
+	db := getDB()
+	defer releaseDB(db)
+
+	rows, err := db.Query(s.SELECT_ALL_USERS)
+	if err != nil {
+		panic(err)
+	}
+	var users []common.User = make([]common.User, 0)
+	for rows.Next() {
+		var user common.User
+		if err := rows.Scan(&user.Id, &user.Name, &user.Passwd); err != nil {
+			fmt.Println("Scan user failed")
+		}
+		users = append(users, user)
+	}
+
+	// var users []common.User = make([]common.User, 0)
+	return &users
+}

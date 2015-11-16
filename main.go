@@ -15,6 +15,7 @@ var jobs map[string]initializer = make(map[string]initializer)
 func init() {
 	jobs["cache_seek_master"] = cache.SeekMaster
 	jobs["cache_load_foods"] = service.InitFoodsFromPersist
+	jobs["mem_load_users"] = service.LoadAllUserToMem
 }
 
 func main() {
