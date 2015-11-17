@@ -19,7 +19,7 @@ func LoadAllUserToMem() {
 }
 
 func GenerateTokens() {
-	defer common.LogTime(time.Now(), "Generate token done.")
+	defer common.LogTime(time.Now(), "All Generate token done.")
 	defer common.RecoverAndPrint("Generate Tokens Failed.")
 	users := persist.GetAllUsers()
 	var wg sync.WaitGroup
@@ -51,7 +51,7 @@ func GenerateTokens() {
 			}
 			mem.SaveToken(token, user.Id)
 			mem.UserSetToken(user.Id, token)
-			fmt.Printf("Token Gene: %d :%s:%s\n", user.Id, user.Name, token)
+			// fmt.Printf("Token Gene: %d :%s:%s\n", user.Id, user.Name, token)
 		}
 	}
 
