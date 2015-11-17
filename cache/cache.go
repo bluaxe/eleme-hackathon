@@ -42,7 +42,7 @@ func SeekMaster() {
 	ll := NewLock("seek master")
 	if ll.Get() {
 		defer ll.Release()
-		fmt.Println("I am master!")
+		// fmt.Println("I am master!")
 	}
 }
 

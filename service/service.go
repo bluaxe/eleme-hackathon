@@ -4,16 +4,20 @@ import (
 	"cache"
 )
 
-var overflow bool = true
+var overflow bool = false
 var overflow_exceed bool = false
 var overflow_thresh int = 404
 
 func Count() int {
-	cnt := cache.Count()
-	if cnt > overflow_thresh {
-		overflow_exceed = true
+	if overflow {
+		cnt := cache.Count()
+		if cnt > overflow_thresh {
+			overflow_exceed = true
+		}
+		return cnt
+	} else {
+		return 0
 	}
-	return cnt
 }
 
 func OverFlow() bool {

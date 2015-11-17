@@ -58,7 +58,7 @@ func (l *Lock) Get() (ok bool) {
 	if err != nil {
 		panic(err)
 	}
-	_, err = redis.Int(ret, err)
+	_, err = redis.String(ret, err)
 	if err != redis.ErrNil {
 		l.value = rand
 		// fmt.Printf("[%s]Got Lock for key: %s \n", time.Now().Format(time.UnixDate), l.Key)
