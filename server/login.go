@@ -38,7 +38,7 @@ func loginDispatcher(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if r.ContentLength == 0 {
-		fmt.Println("Length 0")
+		fmt.Println("Warning: Length 0")
 		writeResponse(w, BadRequest)
 		return
 	}
@@ -54,7 +54,7 @@ func loginDispatcher(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	fmt.Printf("Got Login request %s:%s\n", req.Username, req.Password)
+	fmt.Printf("Debug: Got Login request %s:%s\n", req.Username, req.Password)
 
 	var id int
 	var token string
@@ -65,6 +65,7 @@ func loginDispatcher(w http.ResponseWriter, r *http.Request) {
 		id, token, ok = service.Login(req.Username, req.Password)
 	}
 	if !ok {
+		fmt.Println("Warning: authFail.")
 		writeResponse(w, authFail)
 		return
 	} else {

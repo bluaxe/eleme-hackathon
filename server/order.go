@@ -45,7 +45,7 @@ func ordersDispatcher(w http.ResponseWriter, r *http.Request) {
 
 	var req request_make_order
 	if err := json.Unmarshal(body, &req); err != nil {
-		fmt.Println("Server Make order Unmarshal Error. :", err)
+		fmt.Println("Error: Server Make order Unmarshal Error. :", err)
 		writeResponse(w, BadFormat)
 		return
 	}
@@ -53,10 +53,11 @@ func ordersDispatcher(w http.ResponseWriter, r *http.Request) {
 	ret := service.MakeOrder(req.CardID, id)
 	respon, have := status[ret]
 	if have {
+		fmt.Printf("Warning: Order Failed cart ID:%s, Info:%s\n", req.CardID, ret)
 		writeResponse(w, respon)
 	} else {
 		go service.Count()
-		fmt.Printf("Order Ok ID:%s\n", ret)
+		fmt.Printf("Debug: Order Ok ID:%s\n", ret)
 		w.WriteHeader(http.StatusOK)
 		var response_ok = &order_ok{
 			Id: ret,

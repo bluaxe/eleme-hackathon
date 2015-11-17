@@ -6,4 +6,8 @@
 
 <!-- 3. token local mem -->
 
-4. cart local ?
+4. cart_id local  with userid
+
+5. cart foods cache
+
+6. 

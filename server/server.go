@@ -35,10 +35,10 @@ func dealRequest(w http.ResponseWriter, r *http.Request) (int, bool) {
 		token = r.FormValue("access_token")
 	}
 
-	fmt.Println("Recevice Reques with token: ", token)
+	fmt.Println("Debug: Recevice Reques with token: ", token)
 
 	if token == "" {
-		fmt.Println("token is empty!!!!")
+		fmt.Println("Warning: token is empty!!!!")
 		writeResponse(w, Unauthorized)
 		return 0, false
 	}
@@ -50,7 +50,7 @@ func dealRequest(w http.ResponseWriter, r *http.Request) (int, bool) {
 		id, ok = service.CheckToken(token)
 	}
 	if !ok {
-		fmt.Println("token not exist!!!!")
+		fmt.Println("Warning: token not exist!!!!")
 		writeResponse(w, Unauthorized)
 		return 0, false
 	}
