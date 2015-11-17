@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"mem"
 	"persist"
+	"sync"
 	"time"
 )
 
@@ -21,15 +22,22 @@ func GenerateTokens() {
 	defer common.LogTime(time.Now(), "Generate token done.")
 	defer common.RecoverAndPrint("Generate Tokens Failed.")
 	users := persist.GetAllUsers()
-	/*
-		l := cache.NewLockWithExpire("mastertoken", 30*1000)
+	var wg sync.WaitGroup
+
+	var gen = func(us []common.User, key string) {
+		defer common.LogTime(time.Now(), key)
+		defer common.RecoverAndPrint(key)
+		defer wg.Done()
+		l := cache.NewLockWithExpire(key, 300*1000)
 		l.GetWait()
 		defer l.Release()
-		_, has := cache.UserGetToken(1)
+		_, has := cache.UserGetToken(us[0].Id)
 		if !has {
-			fmt.Println("I am generating.")
+			fmt.Println("I am generating.", key)
+		} else {
+			l.Release()
 		}
-		for _, user := range *users {
+		for _, user := range us {
 			var token string
 			var ok bool
 			if has {
@@ -43,26 +51,39 @@ func GenerateTokens() {
 			}
 			mem.SaveToken(token, user.Id)
 			mem.UserSetToken(user.Id, token)
-			fmt.Printf("Token Gene:%d:%s:%s\n", user.Id, user.Name, token)
+			fmt.Printf("Token Gene: %d :%s:%s\n", user.Id, user.Name, token)
+		}
+	}
+
+	length := len(*users)
+	step := 10000
+	for start := 0; start < length; start += step {
+		key := fmt.Sprintf("tokengen%d", start)
+		cut := (*users)[start : start+step]
+		wg.Add(1)
+		go gen(cut, key)
+	}
+	wg.Wait()
+
+	/*
+
+		for _, user := range *users {
+			l := cache.NewLockWithExpire(user.Name, 5000)
+			func() {
+				l.GetWait()
+				defer l.Release()
+
+				token, ok := cache.UserGetToken(user.Id)
+				if !ok {
+					token = newToken()
+					cache.UserSetToken(user.Id, token)
+				}
+				mem.SaveToken(token, user.Id)
+				mem.UserSetToken(user.Id, token)
+				// fmt.Printf("Token Gene:%d:%s:%s\n", user.Id, user.Name, token)
+			}()
 		}
 	*/
-
-	for _, user := range *users {
-		l := cache.NewLockWithExpire(user.Name, 5000)
-		func() {
-			l.GetWait()
-			defer l.Release()
-
-			token, ok := cache.UserGetToken(user.Id)
-			if !ok {
-				token = newToken()
-				cache.UserSetToken(user.Id, token)
-			}
-			mem.SaveToken(token, user.Id)
-			mem.UserSetToken(user.Id, token)
-			// fmt.Printf("Token Gene:%d:%s:%s\n", user.Id, user.Name, token)
-		}()
-	}
 
 }
 
