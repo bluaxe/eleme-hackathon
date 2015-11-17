@@ -20,9 +20,22 @@ type request_add_food struct {
 	Count   int `json:"count"`
 }
 
+func cartNewReturnOk(cart_id string) string {
+	var c = &newCartID{
+		Id: cart_id,
+	}
+	ret, _ := json.Marshal(*c)
+	return string(ret)
+}
+
 func cartsDispatcher(w http.ResponseWriter, r *http.Request) {
 	now_t := time.Now()
 	defer common.LogTime(now_t, r.URL.String())
+
+	if service.OverFlow() {
+		fmt.Fprintf(w, cartNewReturnOk("zsdfqw"))
+		return
+	}
 
 	if r.Method == "GET" {
 		writeResponse(w, BadRequest)
@@ -36,26 +49,20 @@ func cartsDispatcher(w http.ResponseWriter, r *http.Request) {
 
 	if r.Method == "POST" {
 		cart := service.NewCart(id)
-		var c = &newCartID{
-			Id: cart,
-		}
-
 		fmt.Printf("get cart ok now return. new cart id:%s\n", cart)
-
-		ret, _ := json.Marshal(*c)
-		fmt.Fprintf(w, string(ret))
+		fmt.Fprintf(w, cartNewReturnOk(cart))
 	}
 }
 
 func addFood(w http.ResponseWriter, r *http.Request) {
-	now_t := time.Now()
-	defer common.LogTime(now_t, r.URL.String())
+	defer common.LogTime(time.Now(), r.URL.String())
+	defer common.RecoverAndPrint("Server cart add food error.")
 
-	defer func() {
-		if r := recover(); r != nil {
-			fmt.Println("Panic in Server Add Food", r)
-		}
-	}()
+	if service.OverFlow() {
+		w.WriteHeader(http.StatusNoContent)
+		return
+	}
+
 	uid, ok := dealRequest(w, r)
 	if !ok {
 		return

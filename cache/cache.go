@@ -1,6 +1,7 @@
 package cache
 
 import (
+	"common"
 	"fmt"
 	"github.com/garyburd/redigo/redis"
 	"os"
@@ -51,6 +52,34 @@ func getCon() redis.Conn {
 
 func releaseCon(c redis.Conn) {
 	c.Close()
+}
+
+func Count() int {
+	defer common.RecoverAndPrint("Cache Count error")
+
+	c := getCon()
+	defer releaseCon(c)
+
+	key := k.COUNT_KEY
+
+	cnt, err := redis.Int(c.Do("incr", key))
+	if err != nil {
+		panic(err)
+	}
+	return cnt
+}
+
+func GetCount() int {
+	defer common.RecoverAndPrint("Cache Get Count Error")
+	c := getCon()
+	defer releaseCon(c)
+
+	key := k.COUNT_KEY
+	cnt, err := redis.Int(c.Do("get", key))
+	if err != nil {
+		panic(err)
+	}
+	return cnt
 }
 
 func Test() {

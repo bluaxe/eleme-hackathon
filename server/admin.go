@@ -10,14 +10,12 @@ import (
 )
 
 func adminOrdersDispatcher(w http.ResponseWriter, r *http.Request) {
-	now_t := time.Now()
-	defer common.LogTime(now_t, r.URL.String())
+	defer common.LogTime(time.Now(), r.URL.String())
+	defer common.RecoverAndPrint("Sever Admin Order Failed")
 
-	defer func() {
-		if r := recover(); r != nil {
-			fmt.Println("Panic in Server Make Order", r)
-		}
-	}()
+	if service.OverFlow() {
+		return
+	}
 
 	id, ok := dealRequest(w, r)
 	if !ok {

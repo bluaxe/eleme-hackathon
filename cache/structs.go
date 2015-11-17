@@ -17,6 +17,7 @@ type keys struct {
 	ORDER_ID_KEY   string
 	USER_ORDERS    string
 	USER_TOKEN     string
+	COUNT_KEY      string
 }
 
 var k keys = InitKeys()
@@ -33,6 +34,7 @@ func InitKeys() keys {
 	k.CART_KEY_CHK = `cart:%s`
 	k.USER_ORDERS = `uorder:%d`
 	k.USER_TOKEN = `ut:%d`
+	k.COUNT_KEY = `totalorders`
 	return k
 }
 
