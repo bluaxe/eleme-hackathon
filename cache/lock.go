@@ -3,9 +3,11 @@ package cache
 import (
 	"fmt"
 	"github.com/garyburd/redigo/redis"
+	"time"
 )
 
 var exp = 20000 // int px (3 secondes)
+var lock_wait_interval = 1 * time.Millisecond
 
 type Lock struct {
 	Key    string
@@ -34,6 +36,7 @@ func (l *Lock) GetWait() {
 		if l.Get() {
 			break
 		}
+		time.Sleep(lock_wait_interval)
 	}
 }
 
@@ -56,9 +59,9 @@ func (l *Lock) Get() (ok bool) {
 		panic(err)
 	}
 	_, err = redis.Int(ret, err)
-	if err != nil {
+	if err != redis.ErrNil {
 		l.value = rand
-		// fmt.Printf("Got Lock for key: %s \n", l.Key)
+		// fmt.Printf("[%s]Got Lock for key: %s \n", time.Now().Format(time.UnixDate), l.Key)
 		return true
 	} else {
 		return false
