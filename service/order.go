@@ -3,11 +3,12 @@ package service
 import (
 	"cache"
 	"common"
+	"crypto/rand"
 	"fmt"
 )
 
 func MakeOrder(cart_id string, uid int) string {
-	cart_uid := cache.GetCartUser(cart_id)
+	cart_uid := GetCartUser(cart_id)
 	if cart_uid == -1 {
 		return "cart_not_exist"
 	}
@@ -51,7 +52,6 @@ func DoOrder(order *common.Order, uid int) (string, bool) {
 		return "food_not_enough", false
 	}
 	order.Id = NewOrderID()
-	order.Idstring = fmt.Sprintf("%d", order.Id)
 	SaveOrder(order, uid)
 	return fmt.Sprintf("%d", order.Id), true
 }
@@ -86,6 +86,8 @@ func SaveOrder(order *common.Order, uid int) {
 	cache.SaveOrder(order, uid)
 }
 
-func NewOrderID() int {
-	return cache.NewOrderID()
+func NewOrderID() string {
+	b := make([]byte, 1)
+	rand.Read(b)
+	return fmt.Sprintf("%x", b)
 }

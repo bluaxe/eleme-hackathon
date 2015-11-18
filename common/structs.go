@@ -23,15 +23,22 @@ type CartFood struct {
 }
 
 type Order struct {
-	Idstring string     `json:"id"`
-	Id       int        `json:"-"`
-	Foods    []CartFood `json:"items"`
-	Total    int        `json:"total"`
+	// Id       int        `json:"-"`
+	Id    string     `json:"id"`
+	Foods []CartFood `json:"items"`
+	Total int        `json:"total"`
 }
 
 func RecoverAndPrint(msg string) {
 	if r := recover(); r != nil {
 		fmt.Println(msg, r)
+	}
+}
+
+func RecoverPrintDo(msg string, f func()) {
+	if r := recover(); r != nil {
+		fmt.Println(msg, r)
+		f()
 	}
 }
 

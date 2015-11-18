@@ -6,8 +6,8 @@
 
 <!-- 3. token local mem -->
 
-4. cart_id local  with userid
+<!-- 4. cart_id local  with userid -->
 
 5. cart foods cache
 
-6. 
+<!-- 6. order_id local -->

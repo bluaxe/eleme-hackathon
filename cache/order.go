@@ -90,7 +90,7 @@ func GetUserOrders(uid int) *[]common.Order {
 	if err != nil {
 		panic(err)
 	}
-	var order_ids []int
+	var order_ids []string
 	if err := redis.ScanSlice(values, &order_ids); err != nil {
 		panic(err)
 	}

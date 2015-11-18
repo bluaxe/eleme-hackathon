@@ -9,11 +9,7 @@ import (
 var cart_expire = 60 // 1 Hour
 
 func SaveCart(uid int, cart_id string) {
-	defer func() {
-		if r := recover(); r != nil {
-			fmt.Println("save cart error! : ", r)
-		}
-	}()
+	defer common.RecoverAndPrint("Error: Cache Save Cart Error! ")
 
 	key := getCartKeyCHK(cart_id)
 	c := getCon()
@@ -27,13 +23,13 @@ func SaveCart(uid int, cart_id string) {
 
 func DelCart(cart_id string) {
 	defer common.RecoverAndPrint("Del Cart Error")
-	keychk := getCartKeyCHK(cart_id)
-	key := getCartKey(cart_id)
 
 	c := getCon()
 	defer releaseCon(c)
+	key := getCartKey(cart_id)
 	c.Do("del", key)
-	c.Do("del", keychk)
+	// keychk := getCartKeyCHK(cart_id)
+	// c.Do("del", keychk)
 }
 
 func GetCartUser(cid string) (id int) {
