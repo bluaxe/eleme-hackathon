@@ -5,9 +5,25 @@ import (
 	"fmt"
 	"net/http"
 	"service"
+	"sync"
+	"time"
 )
 
+var order_signal *sync.Cond = sync.NewCond(&sync.Mutex{})
+
 var local = true
+
+var order_return_interval time.Duration = 2 * time.Second
+
+func OrderTicker() {
+	ticker := time.NewTicker(order_return_interval)
+	for t := range ticker.C {
+		order_signal.L.Lock()
+		order_signal.Broadcast()
+		order_signal.L.Unlock()
+		fmt.Println(t, "Order Ticker Broad Casted.")
+	}
+}
 
 func Start(addr string) {
 	http.HandleFunc("/", dispatcher)

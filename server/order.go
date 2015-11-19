@@ -57,7 +57,13 @@ func ordersDispatcher(w http.ResponseWriter, r *http.Request) {
 		writeResponse(w, respon)
 	} else {
 		go service.Count()
-		fmt.Printf("Debug: Order Ok ID:%s\n", ret)
+		/*
+			fmt.Printf("Debug: Order Ok ID:%s Now Waiting signal\n", ret)
+			order_signal.L.Lock()
+			order_signal.Wait()
+			order_signal.L.Unlock()
+		*/
+		fmt.Printf("Debug: Order Signal received, Now return ID:%s\n", ret)
 		w.WriteHeader(http.StatusOK)
 		var response_ok = &order_ok{
 			Id: ret,

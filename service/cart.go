@@ -50,16 +50,18 @@ func AddFood(fid, count, uid int, cid string) string {
 		return "cart_more_than_three"
 	}
 
-	foods := cache.GetCartFoods(cid)
-	// fmt.Println("cart foods len", len(*foods))
-	sum := 0
-	for _, f := range *foods {
-		sum += f.Num
-	}
+	/*
+		foods := cache.GetCartFoods(cid)
+		// fmt.Println("cart foods len", len(*foods))
+		sum := 0
+		for _, f := range *foods {
+			sum += f.Num
+		}
 
-	if sum+count > 3 {
-		return "cart_more_than_three"
-	}
+		if sum+count > 3 {
+			return "cart_more_than_three"
+		}
+	*/
 
 	cache.CartAddFood(cid, fid, count)
 

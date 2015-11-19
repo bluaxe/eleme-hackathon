@@ -53,7 +53,7 @@ func DoOrder(order *common.Order, uid int) (string, bool) {
 	}
 	order.Id = NewOrderID()
 	SaveOrder(order, uid)
-	return fmt.Sprintf("%d", order.Id), true
+	return order.Id, true
 }
 
 func GetUserOrders(uid int) *[]common.Order {
