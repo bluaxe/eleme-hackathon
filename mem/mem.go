@@ -2,6 +2,7 @@ package mem
 
 import (
 	"github.com/streamrail/concurrent-map"
+	"sync"
 )
 
 var user_id_map map[string]int
@@ -10,12 +11,18 @@ var uid_token_map map[int]string
 
 var token_map map[string]int
 
+var food_stock map[int]int
+var food_lock map[int]*sync.Mutex
+
 func init() {
 	user_id_map = make(map[string]int)
 	user_pwd_map = make(map[string]string)
 	uid_token_map = make(map[int]string)
 
 	token_map = make(map[string]int)
+
+	food_stock = make(map[int]int)
+	food_lock = make(map[int]*sync.Mutex)
 }
 
 func Test() {

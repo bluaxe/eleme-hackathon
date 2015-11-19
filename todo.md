@@ -11,3 +11,6 @@
 5. cart foods cache
 
 <!-- 6. order_id local -->
+
+7. food stock spread to servers
+	1000 -> 1. 200, 2. 200, 3 200, redic. 400

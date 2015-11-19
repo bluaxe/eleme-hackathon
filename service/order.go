@@ -36,12 +36,12 @@ func DoOrder(order *common.Order, uid int) (string, bool) {
 	var done map[int]int = make(map[int]int)
 	var fetchall bool = true
 	for _, food := range order.Foods {
-		res := cache.FetchFood(food.Id, food.Num)
+		res := FetchFood(food.Id, food.Num)
 		if res < 0 {
 			fmt.Printf("Warning food stock not enought fid:%d\n", food.Id)
-			cache.FetchFood(food.Id, -food.Num)
+			FetchFood(food.Id, -food.Num)
 			for id, cnt := range done {
-				cache.FetchFood(id, -cnt)
+				FetchFood(id, -cnt)
 			}
 			fetchall = false
 			break
