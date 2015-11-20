@@ -15,11 +15,11 @@ func FetchFood(food_id, amount int) (res int) {
 
 func SetFoodStock(food_id, stock int) {
 	_, have := food_stock[food_id]
-	food_stock[food_id] = stock
-	if have {
-		return
+	if !have {
+		food_lock[food_id] = &sync.Mutex{}
 	}
-	food_lock[food_id] = &sync.Mutex{}
+
 	food_lock[food_id].Lock()
-	food_lock[food_id].Unlock()
+	defer food_lock[food_id].Unlock()
+	food_stock[food_id] = stock
 }

@@ -4,6 +4,7 @@ import (
 	"cache"
 	"fmt"
 	"os"
+	"runtime"
 	"server"
 	"service"
 )
@@ -20,6 +21,7 @@ func init() {
 }
 
 func main() {
+	runtime.GOMAXPROCS(runtime.NumCPU())
 	host := os.Getenv("APP_HOST")
 	port := os.Getenv("APP_PORT")
 	if host == "" {
