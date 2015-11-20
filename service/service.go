@@ -4,9 +4,10 @@ import (
 	"cache"
 )
 
-var overflow bool = false
+const overflow bool = false
+const overflow_thresh int = 404
+
 var overflow_exceed bool = false
-var overflow_thresh int = 404
 
 func Count() int {
 	if overflow {
