@@ -25,10 +25,13 @@ func MakeOrder(cart_id string, uid int) string {
 	var order common.Order = common.Order{
 		Foods: *foods,
 	}
-	ret, ok := DoOrder(&order, uid)
-	if ok {
-		go DestroyCart(cart_id)
-	}
+	ret, _ := DoOrder(&order, uid)
+	/*
+		ret, ok := DoOrder(&order, uid)
+		if ok {
+			go DestroyCart(cart_id)
+		}
+	*/
 	return ret
 }
 
