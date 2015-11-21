@@ -14,3 +14,5 @@
 
 7. food stock spread to servers
 	1000 -> 1. 200, 2. 200, 3 200, redic. 400
+	mem food 添加获取所有剩余量的接口，修改spreadFood 函数的方法，防止竞态条件
+	

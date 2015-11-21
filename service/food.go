@@ -23,12 +23,18 @@ var count_mutex sync.Mutex
 var all_food_static_string string
 
 func FetchFood(food_id, amount int) (rest_stock int) {
-	// return cache.FetchFood(food_id, amount)
-	/*
-		defer func() {
-			fmt.Printf("Fetch Food id:%d, amount:%d  res:%d\n", food_id, amount, rest_stock)
-		}()
-	*/
+	var spread = func(cache_res int) {
+		if localStockAmount(cache_res) > 0 {
+			fmt.Printf("spread food from cache to mem id:%d mount:%d\n", food_id, localStockAmount(cache_res))
+			var food = &common.Food{
+				Id:    food_id,
+				Stock: cache_res,
+			}
+			spreadFoodStock(food)
+		}
+	}
+
+	defer common.RecoverPrintDo("Error Fetch Food in service. ", func() { rest_stock = 0 })
 
 	// Put Back to Cache , not to mem
 	if amount < 0 {
@@ -36,32 +42,29 @@ func FetchFood(food_id, amount int) (rest_stock int) {
 		fmt.Printf("Fetch Food id:%d, amount:%d  Put Back To Cache\n", food_id, amount)
 	}
 
-	res := mem.FetchFood(food_id, amount)
+	got := mem.FetchFoodToEmpty(food_id, amount)
 	// mem enougth
-	if res >= 0 {
-		fmt.Printf("Fetch Food id:%d, amount:%d  res:%d In Mem\n", food_id, amount, res)
+	if got == amount {
+		fmt.Printf("Fetch Food id:%d, amount:%d  got:%d From Mem\n", food_id, amount, got)
+		return 1
+	}
+
+	// mem just fit
+	if got == 0 {
+		fmt.Printf("Fetch Food id:%d, amount:%d  mem is 0, get from cache\n", food_id, amount)
+		res := cache.FetchFood(food_id, amount)
+		go spread(res)
 		return res
 	}
-	// mem just fit
-	if res == -amount {
-		mem.FetchFood(food_id, -amount)
-		fmt.Printf("Fetch Food id:%d, amount:%d  mem is 0, get from cache\n", food_id, amount)
-		return cache.FetchFood(food_id, amount)
-	}
-	// mem not enough, fetch from cache
-	fmt.Printf("Fetch Food id:%d, amount:%d  mem is not enough, get %d from cache\n", food_id, amount, -res)
-	mem.FetchFood(food_id, res)
-	cache_res := cache.FetchFood(food_id, -res)
 
-	if localStockAmount(cache_res) > 0 {
-		fmt.Printf("spread food from cache to mem id:%d mount:%d\n", food_id, localStockAmount(cache_res))
-		var food = &common.Food{
-			Id:    food_id,
-			Stock: cache_res,
-		}
-		spreadFoodStock(food)
+	if got < amount {
+		// mem not enough, fetch from cache
+		fmt.Printf("Fetch Food id:%d, amount:%d  mem is not enough, get %d from cache\n", food_id, amount, amount-got)
+		res := cache.FetchFood(food_id, amount-got)
+		go spread(res)
+		return res
 	}
-	return cache_res
+	panic(fmt.Sprintf("Unknown error !!! food_id:%d, amount:%d, mem got : %d", food_id, amount, got))
 }
 
 func AllFoods() string {
@@ -122,7 +125,7 @@ func InitFoodsFromPersist() {
 		for _, food := range *foods {
 			food.Price, _ = GetFoodPrice(food.Id)
 			fs = append(fs, food)
-			mem.SetFoodStock(food.Id, 0)
+			mem.AddFoodStock(food.Id, 0)
 		}
 		ret, _ := json.Marshal(fs)
 		all_food_static_string = string(ret)
@@ -145,8 +148,8 @@ var localStockAmount = func(stock int) int {
 		return 40
 	case stock > 100:
 		return 20
-	case stock > 50:
-		return 10
+		// case stock > 50:
+		// return 10
 		/*
 			case stock > 50:
 				return 20
@@ -162,7 +165,7 @@ var localStockAmount = func(stock int) int {
 var spreadFoodStock = func(food *common.Food) {
 	am := localStockAmount(food.Stock)
 	cache.FetchFood(food.Id, am)
-	mem.SetFoodStock(food.Id, am)
+	mem.AddFoodStock(food.Id, am)
 }
 
 func spreadFoods() {
