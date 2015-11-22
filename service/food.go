@@ -23,6 +23,9 @@ var count_mutex sync.Mutex
 var all_food_static_string string
 
 func FetchFood(food_id, amount int) (rest_stock int) {
+	if request_count < request_count_thresh {
+		return cache.FetchFood(food_id, amount)
+	}
 	var spread = func(cache_res int) {
 		if localStockAmount(cache_res) > 0 {
 			fmt.Printf("spread food from cache to mem id:%d mount:%d\n", food_id, localStockAmount(cache_res))
@@ -69,21 +72,20 @@ func FetchFood(food_id, amount int) (rest_stock int) {
 
 func AllFoods() string {
 	// return static data since this interface is not important.
-	return all_food_static_string
+	// return all_food_static_string
 
 	// count request and when > thresh , return static data
-	/*
-		if request_count > request_count_thresh {
-			return all_food_static_string
-		}
-		count_mutex.Lock()
-		defer count_mutex.Unlock()
-		request_count += 1
-		if request_count == request_count_thresh {
-			spreadFoods()
-			return all_food_static_string
-		}
-	*/
+
+	if request_count > request_count_thresh {
+		return all_food_static_string
+	}
+	count_mutex.Lock()
+	defer count_mutex.Unlock()
+	request_count += 1
+	if request_count == request_count_thresh {
+		go spreadFoods()
+		return all_food_static_string
+	}
 
 	// real time data from cache
 	foods := cache.GetAllFoodsStock()
@@ -131,7 +133,7 @@ func InitFoodsFromPersist() {
 		all_food_static_string = string(ret)
 	}
 	generateStaticFoods()
-	spreadFoods()
+	// spreadFoods()
 }
 
 var localStockAmount = func(stock int) int {
