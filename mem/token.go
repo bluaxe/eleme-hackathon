@@ -1,8 +1,15 @@
 package mem
 
-import ()
+import (
+	"sync"
+)
+
+var token_map_lock sync.Mutex
+var uid_token_map_lock sync.Mutex
 
 func SaveToken(token string, id int) {
+	token_map_lock.Lock()
+	defer token_map_lock.Unlock()
 	token_map[token] = id
 }
 
@@ -16,5 +23,7 @@ func UserGetToken(uid int) string {
 }
 
 func UserSetToken(uid int, token string) {
+	uid_token_map_lock.Lock()
+	defer uid_token_map_lock.Unlock()
 	uid_token_map[uid] = token
 }

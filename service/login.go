@@ -64,27 +64,6 @@ func GenerateTokens() {
 		go gen(cut, key)
 	}
 	wg.Wait()
-
-	/*
-
-		for _, user := range *users {
-			l := cache.NewLockWithExpire(user.Name, 5000)
-			func() {
-				l.GetWait()
-				defer l.Release()
-
-				token, ok := cache.UserGetToken(user.Id)
-				if !ok {
-					token = newToken()
-					cache.UserSetToken(user.Id, token)
-				}
-				mem.SaveToken(token, user.Id)
-				mem.UserSetToken(user.Id, token)
-				// fmt.Printf("Token Gene:%d:%s:%s\n", user.Id, user.Name, token)
-			}()
-		}
-	*/
-
 }
 
 func LoginLocal(username, passwd string) (int, string, bool) {
