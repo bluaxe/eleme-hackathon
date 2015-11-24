@@ -13,9 +13,9 @@ func saveCart(uid int, cid string) {
 }
 
 func NewCart(uid int) string {
-	b := make([]byte, 6)
+	b := make([]byte, 2)
 	rand.Read(b)
-	cart_id := fmt.Sprintf("%dsjtu%x", uid, b)
+	cart_id := fmt.Sprintf("%dsjtu%x", uid*2+1, b)
 	// saveCart(id, cart_id)
 	return cart_id
 }
@@ -28,7 +28,7 @@ func GetCartUser(cart_id string) (id int) {
 	defer common.RecoverPrintDo("Service get cart user id failed", func() { id = -1 })
 	id_str := strings.Split(cart_id, "sjtu")[0]
 	fmt.Sscanf(id_str, "%d", &id)
-	return id
+	return (id - 1) / 2
 	// return cache.GetCartUser(cart_id)
 }
 
