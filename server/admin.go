@@ -13,10 +13,6 @@ func adminOrdersDispatcher(w http.ResponseWriter, r *http.Request) {
 	defer common.LogTime(time.Now(), r.URL.String())
 	defer common.RecoverAndPrint("Sever Admin Order Failed")
 
-	if service.OverFlow() {
-		return
-	}
-
 	id, ok := dealRequest(w, r)
 	if !ok {
 		return

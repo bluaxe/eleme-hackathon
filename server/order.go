@@ -22,10 +22,6 @@ func ordersDispatcher(w http.ResponseWriter, r *http.Request) {
 	defer common.LogTime(time.Now(), r.URL.String())
 	defer common.RecoverAndPrint("Sever make order failed.")
 
-	if service.OverFlow() {
-		return
-	}
-
 	id, ok := dealRequest(w, r)
 	if !ok {
 		return
@@ -56,7 +52,6 @@ func ordersDispatcher(w http.ResponseWriter, r *http.Request) {
 		fmt.Printf("Warning: Order Failed cart ID:%s, Info:%s\n", req.CardID, ret)
 		writeResponse(w, respon)
 	} else {
-		go service.Count()
 		/*
 			fmt.Printf("Debug: Order Ok ID:%s Now Waiting signal\n", ret)
 			order_signal.L.Lock()
