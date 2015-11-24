@@ -63,13 +63,14 @@ func GetUserOrders(uid int) *[]common.Order {
 	return cache.GetUserOrders(uid)
 }
 
-func GetAllOrders() *[]common.Order {
+func GetAllOrders() *[]common.AdminOrder {
 	uids := cache.GetAllOrderUid()
-	var order_list []common.Order
+	var order_list []common.AdminOrder
 	for _, id := range *uids {
 		var orders = *cache.GetUserOrders(id)
 		for _, order := range orders {
-			order_list = append(order_list, order)
+			adminorder := common.AdminOrder{order, id}
+			order_list = append(order_list, adminorder)
 		}
 	}
 	return &order_list
@@ -90,7 +91,7 @@ func SaveOrder(order *common.Order, uid int) {
 }
 
 func NewOrderID() string {
-	b := make([]byte, 1)
+	b := make([]byte, 6)
 	rand.Read(b)
 	return fmt.Sprintf("%x", b)
 }

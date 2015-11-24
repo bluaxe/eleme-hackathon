@@ -29,6 +29,11 @@ type Order struct {
 	Total int        `json:"total"`
 }
 
+type AdminOrder struct {
+	Order
+	Uid int `json:"user_id"`
+}
+
 func RecoverAndPrint(msg string) {
 	if r := recover(); r != nil {
 		fmt.Println(msg, r)
