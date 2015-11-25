@@ -58,7 +58,7 @@ func GetAllOrderUid() *[]int {
 	for _, key := range keys {
 		var id int
 		fmt.Sscanf(key, "uorder:%d", &id)
-		fmt.Printf("key:%s id:%d\n", key, id)
+		// fmt.Printf("key:%s id:%d\n", key, id)
 		ids = append(ids, id)
 	}
 	return &ids
