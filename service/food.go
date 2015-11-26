@@ -65,7 +65,7 @@ func FetchFood(food_id, amount int) (rest_stock int) {
 
 func AllFoods() string {
 	// return static data since this interface is not important.
-	// return all_food_static_string
+	return all_food_static_string
 
 	// real time data from cache
 	foods := cache.GetAllFoodsStock()
