@@ -10,6 +10,15 @@ func SaveUser(user *common.User) {
 	user_pwd_map[user.Name] = user.Passwd
 }
 
+func GetUserId(username string) int {
+	id, ok := user_id_map[username]
+	if !ok {
+		return -1
+	} else {
+		return id
+	}
+}
+
 func Login(username, passwd string) (int, bool) {
 	defer common.RecoverAndPrint("mem Login Failed.")
 
