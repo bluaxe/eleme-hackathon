@@ -17,7 +17,7 @@ var food_list = func() map[int]int {
 var all_food_static_string string
 
 func FetchFood(food_id, amount int) (rest_stock int) {
-	return cache.FetchFood(food_id, amount)
+	// return cache.FetchFood(food_id, amount)
 
 	var spread = func(cache_res int) {
 		if localStockAmount(cache_res) > 0 {
