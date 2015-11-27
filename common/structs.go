@@ -36,20 +36,32 @@ type AdminOrder struct {
 
 func RecoverAndPrint(msg string) {
 	if r := recover(); r != nil {
-		fmt.Println(msg, r)
+		// fmt.Println(msg, r)
 	}
 }
 
 func RecoverPrintDo(msg string, f func()) {
 	if r := recover(); r != nil {
-		fmt.Println(msg, r)
+		// fmt.Println(msg, r)
 		f()
 	}
 }
 
+func RecoverAndDo(f func()) {
+	if r := recover(); r != nil {
+		f()
+	}
+}
+
+func Recover() {
+	recover()
+}
+
 func LogTime(t time.Time, msg string) {
+
 	now_t := time.Now()
 	dur := now_t.Sub(t)
 	ms := dur.Nanoseconds() / 1000000
 	fmt.Printf("[%dms] %s\n", ms, msg)
+
 }

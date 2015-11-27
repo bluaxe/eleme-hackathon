@@ -54,7 +54,7 @@ func loginDispatcher(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	fmt.Printf("Debug: Got Login request %s:%s\n", req.Username, req.Password)
+	// fmt.Printf("Debug: Got Login request %s:%s\n", req.Username, req.Password)
 
 	var id int
 	var token string

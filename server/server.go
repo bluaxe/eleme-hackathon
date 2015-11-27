@@ -51,7 +51,7 @@ func dealRequest(w http.ResponseWriter, r *http.Request) (int, bool) {
 		token = r.FormValue("access_token")
 	}
 
-	fmt.Println("Debug: Recevice Reques with token: ", token)
+	// fmt.Println("Debug: Recevice Reques with token: ", token)
 
 	if token == "" {
 		fmt.Println("Warning: token is empty!!!!")

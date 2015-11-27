@@ -38,20 +38,33 @@ func MakeOrder(cart_id string, uid int) string {
 func DoOrder(order *common.Order, uid int) (string, bool) {
 	var done map[int]int = make(map[int]int)
 	var fetchall bool = true
+	var wait chan common.CartFood = make(chan common.CartFood)
 	for _, food := range order.Foods {
-		res := FetchFood(food.Id, food.Num)
-		if res < 0 {
-			fmt.Printf("Warning food stock not enought fid:%d\n", food.Id)
-			FetchFood(food.Id, -food.Num)
-			for id, cnt := range done {
-				FetchFood(id, -cnt)
+		go func(food common.CartFood) {
+			res := FetchFood(food.Id, food.Num)
+			if res < 0 {
+				fmt.Printf("Warning food stock not enought fid:%d\n", food.Id)
+				go FetchFood(food.Id, -food.Num)
+				wait <- common.CartFood{
+					Id: -1,
+				}
+			} else {
+				wait <- food
 			}
+		}(food)
+	}
+	for i := 0; i < len(order.Foods); i++ {
+		f := <-wait
+		if f.Id >= 0 {
+			done[f.Id] = f.Num
+		} else {
 			fetchall = false
-			break
 		}
-		done[food.Id] = food.Num
 	}
 	if !fetchall {
+		for id, cnt := range done {
+			go FetchFood(id, -cnt)
+		}
 		return "food_not_enough", false
 	}
 	order.Id = NewOrderID()

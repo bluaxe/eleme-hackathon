@@ -33,12 +33,8 @@ func DelCart(cart_id string) {
 }
 
 func GetCartUser(cid string) (id int) {
-	defer func() {
-		if r := recover(); r != nil {
-			fmt.Println("Get Cart User error! : ", r)
-			id = -1
-		}
-	}()
+	message := fmt.Sprintf("Error Cache Get Cart User Error! cid:%s\n", cid)
+	defer common.RecoverPrintDo(message, func() { id = -1 })
 
 	c := getCon()
 	defer releaseCon(c)
@@ -55,11 +51,7 @@ func GetCartUser(cid string) (id int) {
 }
 
 func GetCartFoods(cid string) *[]common.CartFood {
-	defer func() {
-		if r := recover(); r != nil {
-			fmt.Println("Get Cart Foods error! : ", r)
-		}
-	}()
+	defer common.Recover()
 
 	c := getCon()
 	defer releaseCon(c)
@@ -78,11 +70,7 @@ func GetCartFoods(cid string) *[]common.CartFood {
 }
 
 func CartAddFood(cid string, food_id, count int) {
-	defer func() {
-		if r := recover(); r != nil {
-			fmt.Println("Cart Add Food error! : ", r)
-		}
-	}()
+	defer common.Recover()
 
 	c := getCon()
 	defer releaseCon(c)

@@ -7,11 +7,15 @@ import (
 )
 
 func FoodsNum() (n int) {
-	defer func() {
-		if r := recover(); r != nil {
-			fmt.Println("Get Foods Num Err! : ", r)
-		}
-	}()
+	/*
+		defer func() {
+			if r := recover(); r != nil {
+				fmt.Println("Get Foods Num Err! : ", r)
+			}
+		}()
+	*/
+	defer common.Recover()
+
 	c := getCon()
 	defer releaseCon(c)
 
@@ -25,11 +29,15 @@ func FoodsNum() (n int) {
 }
 
 func FoodImport(food common.Food) {
-	defer func() {
-		if r := recover(); r != nil {
-			fmt.Println("Import Food Err! : ", r)
-		}
-	}()
+	/*
+		defer func() {
+			if r := recover(); r != nil {
+				fmt.Println("Import Food Err! : ", r)
+			}
+		}()
+	*/
+	defer common.RecoverAndPrint("Error Import Food Error")
+
 	c := getCon()
 	defer releaseCon(c)
 	// fmt.Println(food.Id, food.Price, food.Stock)
@@ -48,11 +56,7 @@ func FoodImport(food common.Food) {
 }
 
 func GetFoodStock(food_id int) (stock int) {
-	defer func() {
-		if r := recover(); r != nil {
-			fmt.Println("Not Found Food in Cache")
-		}
-	}()
+	defer common.RecoverAndPrint("Not Found Food in Cache")
 
 	c := getCon()
 	defer releaseCon(c)
@@ -77,6 +81,7 @@ func FetchFood(food_id, count int) int {
 
 	key := k.FOOD_STOCK_KEY
 	stock, err := redis.Int(c.Do("hincrby", key, food_id, -count))
+	fmt.Printf("\t\tCache Fetch fid:%d num:%d, res:%d\n", food_id, count, stock)
 	if err != nil {
 		panic(err)
 	}
