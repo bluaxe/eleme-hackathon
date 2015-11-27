@@ -81,7 +81,7 @@ func FetchFood(food_id, count int) int {
 
 	key := k.FOOD_STOCK_KEY
 	stock, err := redis.Int(c.Do("hincrby", key, food_id, -count))
-	fmt.Printf("\t\tCache Fetch fid:%d num:%d, res:%d\n", food_id, count, stock)
+	// fmt.Printf("\t\tCache Fetch fid:%d num:%d, res:%d\n", food_id, count, stock)
 	if err != nil {
 		panic(err)
 	}
