@@ -5,6 +5,7 @@ import (
 	"common"
 	"crypto/rand"
 	"fmt"
+	"time"
 )
 
 func MakeOrder(cart_id string, uid int) string {
@@ -68,11 +69,12 @@ func DoOrder(order *common.Order, uid int) (string, bool) {
 		return "food_not_enough", false
 	}
 	order.Id = NewOrderID()
-	SaveOrder(order, uid)
+	go SaveOrder(order, uid)
 	return order.Id, true
 }
 
 func GetUserOrders(uid int) *[]common.Order {
+	time.Sleep(1 * time.Second)
 	return cache.GetUserOrders(uid)
 }
 
