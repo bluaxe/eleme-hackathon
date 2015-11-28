@@ -11,7 +11,7 @@ var uid_token_map map[int]string
 
 var token_map map[string]int
 
-var food_stock map[int]int
+var food_stock map[int]*int32
 var food_lock map[int]*sync.Mutex
 
 func init() {
@@ -21,7 +21,7 @@ func init() {
 
 	token_map = make(map[string]int)
 
-	food_stock = make(map[int]int)
+	food_stock = make(map[int]*int32)
 	food_lock = make(map[int]*sync.Mutex)
 }
 
