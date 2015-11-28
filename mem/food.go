@@ -42,5 +42,5 @@ func AddFoodStock(food_id, stock int) {
 	}
 	food_lock[food_id].Lock()
 	defer food_lock[food_id].Unlock()
-	*food_stock[food_id] += int32(stock)
+	atomic.AddInt32(food_stock[food_id], int32(stock))
 }
