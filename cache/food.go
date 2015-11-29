@@ -70,21 +70,25 @@ func GetFoodStock(food_id int) (stock int) {
 }
 
 func FetchFood(food_id, count int) int {
-	defer func() {
-		if r := recover(); r != nil {
-			fmt.Println("Cache Fetch Not Found Food in Cache", r)
-		}
-	}()
+	/*
+		defer func() {
+			if r := recover(); r != nil {
+				fmt.Println("Cache Fetch Not Found Food in Cache", r)
+			}
+		}()
+	*/
 
 	c := getCon()
 	defer releaseCon(c)
 
 	key := k.FOOD_STOCK_KEY
-	stock, err := redis.Int(c.Do("hincrby", key, food_id, -count))
+	stock, _ := redis.Int(c.Do("hincrby", key, food_id, -count))
 	// fmt.Printf("\t\tCache Fetch fid:%d num:%d, res:%d\n", food_id, count, stock)
-	if err != nil {
-		panic(err)
-	}
+	/*
+		if err != nil {
+			panic(err)
+		}
+	*/
 	return stock
 }
 

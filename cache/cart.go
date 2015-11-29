@@ -9,16 +9,19 @@ import (
 var cart_expire = 60 // 1 Hour
 
 func SaveCart(uid int, cart_id string) {
-	defer common.RecoverAndPrint("Error: Cache Save Cart Error! ")
+	// defer common.RecoverAndPrint("Error: Cache Save Cart Error! ")
 
 	key := getCartKeyCHK(cart_id)
 	c := getCon()
 	defer releaseCon(c)
 
-	_, err := redis.String(c.Do("setex", key, cart_expire, uid))
-	if err != nil {
-		panic(err)
-	}
+	redis.String(c.Do("setex", key, cart_expire, uid))
+	/*
+		_, err := redis.String(c.Do("setex", key, cart_expire, uid))
+		if err != nil {
+			panic(err)
+		}
+	*/
 }
 
 func DelCart(cart_id string) {
@@ -51,7 +54,7 @@ func GetCartUser(cid string) (id int) {
 }
 
 func GetCartFoods(cid string) *[]common.CartFood {
-	defer common.Recover()
+	// defer common.Recover()
 
 	c := getCon()
 	defer releaseCon(c)
@@ -59,26 +62,34 @@ func GetCartFoods(cid string) *[]common.CartFood {
 	key := getCartKey(cid)
 
 	var foods []common.CartFood
-	values, err := redis.Values(c.Do("hgetall", key))
-	if err != nil {
-		panic(err)
-	}
-	if err := redis.ScanSlice(values, &foods); err != nil {
-		panic(err)
-	}
+	values, _ := redis.Values(c.Do("hgetall", key))
+	/*
+		if err != nil {
+			panic(err)
+		}
+	*/
+	redis.ScanSlice(values, &foods)
+	/*
+		if err := redis.ScanSlice(values, &foods); err != nil {
+			panic(err)
+		}
+	*/
 	return &foods
 }
 
 func CartAddFood(cid string, food_id, count int) {
-	defer common.Recover()
+	// defer common.Recover()
 
 	c := getCon()
 	defer releaseCon(c)
 
 	key := getCartKey(cid)
 
-	_, err := c.Do("hincrby", key, food_id, count)
-	if err != nil {
-		panic(err)
-	}
+	c.Do("hincrby", key, food_id, count)
+	/*
+		_, err := c.Do("hincrby", key, food_id, count)
+		if err != nil {
+			panic(err)
+		}
+	*/
 }

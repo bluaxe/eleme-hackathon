@@ -1,14 +1,14 @@
 package server
 
 import (
-	"common"
+	// "common"
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
 	"net/http"
 	"service"
 	"strings"
-	"time"
+	// "time"
 )
 
 type newCartID struct {
@@ -29,8 +29,8 @@ func cartNewReturnOk(cart_id string) string {
 }
 
 func cartsDispatcher(w http.ResponseWriter, r *http.Request) {
-	now_t := time.Now()
-	defer common.LogTime(now_t, r.URL.String())
+	// now_t := time.Now()
+	// defer common.LogTime(now_t, r.URL.String())
 
 	if r.Method == "GET" {
 		writeResponse(w, BadRequest)
@@ -44,14 +44,14 @@ func cartsDispatcher(w http.ResponseWriter, r *http.Request) {
 
 	if r.Method == "POST" {
 		cart := service.NewCart(id)
-		fmt.Printf("Debug: get cart ok now return. new cart id:%s\n", cart)
+		// fmt.Printf("Debug: get cart ok now return. new cart id:%s\n", cart)
 		fmt.Fprintf(w, cartNewReturnOk(cart))
 	}
 }
 
 func addFood(w http.ResponseWriter, r *http.Request) {
-	defer common.LogTime(time.Now(), r.URL.String())
-	defer common.RecoverAndPrint("Server cart add food error.")
+	// defer common.LogTime(time.Now(), r.URL.String())
+	// defer common.RecoverAndPrint("Server cart add food error.")
 
 	uid, ok := dealRequest(w, r)
 	if !ok {
@@ -66,19 +66,19 @@ func addFood(w http.ResponseWriter, r *http.Request) {
 
 	var req request_add_food
 	if err := json.Unmarshal(body, &req); err != nil {
-		fmt.Println("Error: Server Cart Add Food Unmarshal Error. :", err)
+		// fmt.Println("Error: Server Cart Add Food Unmarshal Error. :", err)
 		writeResponse(w, BadFormat)
 		return
 	}
 
-	fmt.Printf("Debug: got request on add food, fid:%d, count : %d\n", req.Food_id, req.Count)
+	// fmt.Printf("Debug: got request on add food, fid:%d, count : %d\n", req.Food_id, req.Count)
 
 	res := service.AddFood(req.Food_id, req.Count, uid, cart_id)
 	if res == "ok" {
 		w.WriteHeader(http.StatusNoContent)
 		return
 	} else {
-		fmt.Println("Warning: ", res)
+		// fmt.Println("Warning: ", res)
 		writeResponse(w, status[res])
 	}
 }

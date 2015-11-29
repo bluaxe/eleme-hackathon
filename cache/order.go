@@ -25,23 +25,29 @@ func NewOrderID() (id int) {
 }
 
 func SaveOrder(order *common.Order, uid int) {
-	defer common.RecoverAndPrint("Save Order Error! ")
+	// defer common.RecoverAndPrint("Save Order Error! ")
 
 	c := getCon()
 	defer releaseCon(c)
 
 	buf := new(bytes.Buffer)
 	enc := gob.NewEncoder(buf)
-	if err := enc.Encode(order); err != nil {
-		panic(err)
-	}
+	enc.Encode(order)
+	/*
+		if err := enc.Encode(order); err != nil {
+			panic(err)
+		}
+	*/
 	orderbytes := buf.Bytes()
 
 	key := getUserOrderKey(uid)
-	_, err := redis.Int(c.Do("hset", key, order.Id, orderbytes))
-	if err != nil {
-		panic(err)
-	}
+	redis.Int(c.Do("hset", key, order.Id, orderbytes))
+	/*
+		_, err := redis.Int(c.Do("hset", key, order.Id, orderbytes))
+		if err != nil {
+			panic(err)
+		}
+	*/
 }
 
 func GetAllOrderUid() *[]int {
@@ -65,16 +71,19 @@ func GetAllOrderUid() *[]int {
 }
 
 func GetUserOrderLen(uid int) int {
-	defer common.RecoverAndPrint("Get User Order Len")
+	// defer common.RecoverAndPrint("Get User Order Len")
 	c := getCon()
 	defer releaseCon(c)
 
 	key := getUserOrderKey(uid)
 
-	length, err := redis.Int(c.Do("hlen", key))
-	if err != nil {
-		panic(err)
-	}
+	length, _ := redis.Int(c.Do("hlen", key))
+	/*
+		length, err := redis.Int(c.Do("hlen", key))
+		if err != nil {
+			panic(err)
+		}
+	*/
 	return length
 }
 

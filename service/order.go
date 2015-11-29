@@ -20,7 +20,7 @@ func MakeOrder(cart_id string, uid int) string {
 		return "too_many_orders"
 	}
 
-	fmt.Printf("Make order [cart:%s, uid:%d]\n", cart_id, uid)
+	// fmt.Printf("Make order [cart:%s, uid:%d]\n", cart_id, uid)
 
 	foods := cache.GetCartFoods(cart_id)
 	var order common.Order = common.Order{
@@ -44,7 +44,7 @@ func DoOrder(order *common.Order, uid int) (string, bool) {
 		go func(food common.CartFood) {
 			res := FetchFood(food.Id, food.Num)
 			if res < 0 {
-				fmt.Printf("Warning food stock not enought fid:%d\n", food.Id)
+				// fmt.Printf("Warning food stock not enought fid:%d\n", food.Id)
 				go FetchFood(food.Id, -food.Num)
 				wait <- common.CartFood{
 					Id: -1,

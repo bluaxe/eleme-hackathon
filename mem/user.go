@@ -2,7 +2,7 @@ package mem
 
 import (
 	"common"
-	"fmt"
+	// "fmt"
 )
 
 func SaveUser(user *common.User) {
@@ -20,21 +20,22 @@ func GetUserId(username string) int {
 }
 
 func Login(username, passwd string) (int, bool) {
-	defer common.RecoverAndPrint("mem Login Failed.")
+	// defer common.RecoverAndPrint("mem Login Failed.")
 
 	pwd, ok := user_pwd_map[username]
 	if !ok {
-		fmt.Println("login failed username not exist")
+		// fmt.Println("login failed username not exist")
 		return 0, false
 	}
 	if pwd != passwd {
-		fmt.Println("login failed passwd not correct")
+		// fmt.Println("login failed passwd not correct")
 		return 0, false
 	} else {
 		id, ok := user_id_map[username]
 		if ok {
 			return id, ok
 		}
-		panic("mem get user id failed.")
+		// panic("mem get user id failed.")
 	}
+	return 0, false
 }

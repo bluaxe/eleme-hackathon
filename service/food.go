@@ -21,7 +21,7 @@ func FetchFood(food_id, amount int) (rest_stock int) {
 
 	var spread = func(cache_res int) {
 		if localStockAmount(cache_res) > 0 {
-			fmt.Printf("spread food from cache to mem id:%d mount:%d\n", food_id, localStockAmount(cache_res))
+			// fmt.Printf("spread food from cache to mem id:%d mount:%d\n", food_id, localStockAmount(cache_res))
 			var food = &common.Food{
 				Id:    food_id,
 				Stock: cache_res,
@@ -30,24 +30,24 @@ func FetchFood(food_id, amount int) (rest_stock int) {
 		}
 	}
 
-	defer common.RecoverPrintDo("Error Fetch Food in service. ", func() { rest_stock = 0 })
+	// defer common.RecoverPrintDo("Error Fetch Food in service. ", func() { rest_stock = 0 })
 
 	// Put Back to Cache , not to mem
 	if amount < 0 {
 		return cache.FetchFood(food_id, amount)
-		fmt.Printf("Fetch Food id:%d, amount:%d  Put Back To Cache\n", food_id, amount)
+		// fmt.Printf("Fetch Food id:%d, amount:%d  Put Back To Cache\n", food_id, amount)
 	}
 
 	got := mem.FetchFoodToEmpty(food_id, amount)
 	// mem enougth
 	if got == amount {
-		fmt.Printf("Fetch Food id:%d, amount:%d  got:%d From Mem\n", food_id, amount, got)
+		// fmt.Printf("Fetch Food id:%d, amount:%d  got:%d From Mem\n", food_id, amount, got)
 		return 1
 	}
 
 	// mem just fit
 	if got == 0 {
-		fmt.Printf("Fetch Food id:%d, amount:%d  mem is 0, get from cache\n", food_id, amount)
+		// fmt.Printf("Fetch Food id:%d, amount:%d  mem is 0, get from cache\n", food_id, amount)
 		res := cache.FetchFood(food_id, amount)
 		go spread(res)
 		return res
@@ -55,12 +55,13 @@ func FetchFood(food_id, amount int) (rest_stock int) {
 
 	if got < amount {
 		// mem not enough, fetch from cache
-		fmt.Printf("Fetch Food id:%d, amount:%d  mem is not enough, get %d from cache\n", food_id, amount, amount-got)
+		// fmt.Printf("Fetch Food id:%d, amount:%d  mem is not enough, get %d from cache\n", food_id, amount, amount-got)
 		res := cache.FetchFood(food_id, amount-got)
 		go spread(res)
 		return res
 	}
-	panic(fmt.Sprintf("Unknown error !!! food_id:%d, amount:%d, mem got : %d", food_id, amount, got))
+	// panic(fmt.Sprintf("Unknown error !!! food_id:%d, amount:%d, mem got : %d", food_id, amount, got))
+	return 0
 }
 
 func AllFoods() string {

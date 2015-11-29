@@ -1,13 +1,13 @@
 package server
 
 import (
-	"common"
+	// "common"
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
 	"net/http"
 	"service"
-	"time"
+	// "time"
 )
 
 type order_ok struct {
@@ -19,8 +19,8 @@ type request_make_order struct {
 }
 
 func ordersDispatcher(w http.ResponseWriter, r *http.Request) {
-	defer common.LogTime(time.Now(), r.URL.String())
-	defer common.RecoverAndPrint("Sever make order failed.")
+	// defer common.LogTime(time.Now(), r.URL.String())
+	// defer common.RecoverAndPrint("Sever make order failed.")
 
 	id, ok := dealRequest(w, r)
 	if !ok {
@@ -41,7 +41,7 @@ func ordersDispatcher(w http.ResponseWriter, r *http.Request) {
 
 	var req request_make_order
 	if err := json.Unmarshal(body, &req); err != nil {
-		fmt.Println("Error: Server Make order Unmarshal Error. :", err)
+		// fmt.Println("Error: Server Make order Unmarshal Error. :", err)
 		writeResponse(w, BadFormat)
 		return
 	}
@@ -49,7 +49,7 @@ func ordersDispatcher(w http.ResponseWriter, r *http.Request) {
 	ret := service.MakeOrder(req.CardID, id)
 	respon, have := status[ret]
 	if have {
-		fmt.Printf("Warning: Order Failed cart ID:%s, Info:%s\n", req.CardID, ret)
+		// fmt.Printf("Warning: Order Failed cart ID:%s, Info:%s\n", req.CardID, ret)
 		writeResponse(w, respon)
 	} else {
 		/*
@@ -58,7 +58,7 @@ func ordersDispatcher(w http.ResponseWriter, r *http.Request) {
 			order_signal.Wait()
 			order_signal.L.Unlock()
 		*/
-		fmt.Printf("Debug: Order Signal received, Now return ID:%s\n", ret)
+		// fmt.Printf("Debug: Order Signal received, Now return ID:%s\n", ret)
 		w.WriteHeader(http.StatusOK)
 		var response_ok = &order_ok{
 			Id: ret,
