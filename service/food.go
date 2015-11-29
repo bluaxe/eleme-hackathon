@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"mem"
 	"persist"
+	"time"
 )
 
 var food_list = func() map[int]int {
@@ -115,6 +116,25 @@ func InitFoodsFromPersist() {
 	}
 	generateStaticFoods()
 	// spreadFoods()
+	go RefreshFoodList()
+}
+
+func RefreshFoodList() {
+	fmt.Println("Start time:", time.Now())
+	ticker := time.NewTicker(10 * time.Second)
+	for _ = range ticker.C {
+		foods := cache.GetAllFoodsStock()
+		var fs []common.Food = make([]common.Food, 0)
+		for _, food := range *foods {
+			food.Price, _ = GetFoodPrice(food.Id)
+			/*
+				add estimated stock in memory
+			*/
+			fs = append(fs, food)
+		}
+		ret, _ := json.Marshal(fs)
+		all_food_static_string = string(ret)
+	}
 }
 
 var localStockAmount = func(stock int) int {
