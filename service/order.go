@@ -68,7 +68,7 @@ func DoOrder(order *common.Order, uid int) (string, bool) {
 		}
 		return "food_not_enough", false
 	}
-	order.Id = NewOrderID()
+	order.Id = fmt.Sprintf("%d", uid)
 	go SaveOrder(order, uid)
 	return order.Id, true
 }

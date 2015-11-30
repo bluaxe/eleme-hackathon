@@ -5,6 +5,14 @@ import (
 	// "fmt"
 )
 
+func SetLoginRetString(uid int, ret string) {
+	login_rets[uid] = &ret
+}
+
+func GetLoginRetString(uid int) *string {
+	return login_rets[uid]
+}
+
 func SaveUser(user *common.User) {
 	user_id_map[user.Name] = user.Id
 	user_pwd_map[user.Name] = user.Passwd

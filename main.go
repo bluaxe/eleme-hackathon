@@ -18,6 +18,9 @@ func init() {
 	// jobs["cache_seek_master"] = cache.SeekMaster
 	jobs["cache_load_foods"] = service.InitFoodsFromPersist
 	jobs["mem_load_users"] = service.LoadAllUserToMem
+	jobs["mem_gen_orders"] = server.InitOrderStrings
+	jobs["mem_gen_login_rets"] = server.InitLoginRetStrings
+	jobs["mem_gen_cart_rets"] = server.InitCartRetStrings
 	// jobs["mem_gen_tokens"] = service.GenerateTokens
 }
 
@@ -34,6 +37,7 @@ func main() {
 	}
 	addr := fmt.Sprintf("%s:%s", host, port)
 
+	service.GenerateTokens()
 	for _, v := range jobs {
 		v()
 	}

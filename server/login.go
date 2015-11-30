@@ -5,7 +5,9 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
+	"mem"
 	"net/http"
+	"persist"
 	"service"
 	"time"
 )
@@ -25,6 +27,20 @@ var authFail = &Response{
 	status: http.StatusForbidden,
 	Code:   "USER_AUTH_FAIL",
 	Msg:    "用户名或密码错误",
+}
+
+func InitLoginRetStrings() {
+	users := persist.GetAllUsers()
+	for _, user := range *users {
+		token := mem.UserGetToken(user.Id)
+		var authOk = &responseOK{
+			Id:       user.Id,
+			Username: user.Name,
+			Token:    *token,
+		}
+		ret, _ := json.Marshal(authOk)
+		mem.SetLoginRetString(user.Id, string(ret))
+	}
 }
 
 func loginDispatcher(w http.ResponseWriter, r *http.Request) {
@@ -57,25 +73,27 @@ func loginDispatcher(w http.ResponseWriter, r *http.Request) {
 	// fmt.Printf("Debug: Got Login request %s:%s\n", req.Username, req.Password)
 
 	var id int
-	var token string
+	// var token string
 	var ok bool
 	if local {
-		id, token, ok = service.LoginLocal(req.Username, req.Password)
+		id, _, ok = service.LoginLocal(req.Username, req.Password)
 	} else {
-		id, token, ok = service.Login(req.Username, req.Password)
+		id, _, ok = service.Login(req.Username, req.Password)
 	}
 	if !ok {
 		// fmt.Println("Warning: authFail.")
 		writeResponse(w, authFail)
 		return
 	} else {
-		var authOk = &responseOK{
-			Id:       id,
-			Username: req.Username,
-			Token:    token,
-		}
+		/*
+			var authOk = &responseOK{
+				Id:       id,
+				Username: req.Username,
+				Token:    token,
+			}
+			ret, _ := json.Marshal(authOk)
+		*/
 		w.WriteHeader(http.StatusOK)
-		ret, _ := json.Marshal(authOk)
-		fmt.Fprintf(w, string(ret))
+		fmt.Fprintf(w, *mem.GetLoginRetString(id))
 	}
 }

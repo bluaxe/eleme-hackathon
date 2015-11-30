@@ -6,8 +6,10 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
+	"persist"
 	"service"
 	// "time"
+	"mem"
 )
 
 type order_ok struct {
@@ -16,6 +18,18 @@ type order_ok struct {
 
 type request_make_order struct {
 	CardID string `json:"cart_id"`
+}
+
+func InitOrderStrings() {
+	users := persist.GetAllUsers()
+	mem.InitOrderSlice(len(*users))
+	for _, user := range *users {
+		var response_ok = &order_ok{
+			Id: fmt.Sprintf("%d", user.Id),
+		}
+		response_ok_string, _ := json.Marshal(response_ok)
+		mem.SetOrderRetString(user.Id, string(response_ok_string))
+	}
 }
 
 func ordersDispatcher(w http.ResponseWriter, r *http.Request) {
@@ -60,10 +74,12 @@ func ordersDispatcher(w http.ResponseWriter, r *http.Request) {
 		*/
 		// fmt.Printf("Debug: Order Signal received, Now return ID:%s\n", ret)
 		w.WriteHeader(http.StatusOK)
-		var response_ok = &order_ok{
-			Id: ret,
-		}
-		response_ok_string, _ := json.Marshal(response_ok)
-		fmt.Fprintf(w, string(response_ok_string))
+		/*
+			var response_ok = &order_ok{
+				Id: ret,
+			}
+			response_ok_string, _ := json.Marshal(response_ok)
+		*/
+		fmt.Fprintf(w, *mem.GetOrderRetString(id))
 	}
 }

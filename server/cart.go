@@ -9,6 +9,8 @@ import (
 	"service"
 	"strings"
 	// "time"
+	"mem"
+	"persist"
 )
 
 type newCartID struct {
@@ -28,6 +30,18 @@ func cartNewReturnOk(cart_id string) string {
 	return string(ret)
 }
 
+func InitCartRetStrings() {
+	users := persist.GetAllUsers()
+	mem.InitOrderSlice(len(*users))
+	for _, user := range *users {
+		var c = newCartID{
+			Id: fmt.Sprintf("%d", user.Id<<2),
+		}
+		ret, _ := json.Marshal(c)
+		mem.SetCartRetString(user.Id, string(ret))
+	}
+}
+
 func cartsDispatcher(w http.ResponseWriter, r *http.Request) {
 	// now_t := time.Now()
 	// defer common.LogTime(now_t, r.URL.String())
@@ -43,9 +57,10 @@ func cartsDispatcher(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if r.Method == "POST" {
-		cart := service.NewCart(id)
+		// cart := service.NewCart(id)
 		// fmt.Printf("Debug: get cart ok now return. new cart id:%s\n", cart)
-		fmt.Fprintf(w, cartNewReturnOk(cart))
+		// fmt.Fprintf(w, cartNewReturnOk(cart))
+		fmt.Fprintf(w, *mem.GetCartRetString(id))
 	}
 }
 
