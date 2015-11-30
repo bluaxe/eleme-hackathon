@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"os"
 	"runtime"
-	"runtime/debug"
+	// "runtime/debug"
 	"server"
 	"service"
 )
@@ -28,7 +28,7 @@ func main() {
 	runtime.GOMAXPROCS(runtime.NumCPU())
 	host := os.Getenv("APP_HOST")
 	port := os.Getenv("APP_PORT")
-	debug.SetGCPercent(500)
+	// debug.SetGCPercent(500)
 	if host == "" {
 		host = "localhost"
 	}
