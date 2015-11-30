@@ -57,10 +57,10 @@ func cartsDispatcher(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if r.Method == "POST" {
-		// cart := service.NewCart(id)
+		cart := service.NewCart(id)
 		// fmt.Printf("Debug: get cart ok now return. new cart id:%s\n", cart)
-		// fmt.Fprintf(w, cartNewReturnOk(cart))
-		fmt.Fprintf(w, *mem.GetCartRetString(id))
+		fmt.Fprintf(w, cartNewReturnOk(cart))
+		// fmt.Fprintf(w, *mem.GetCartRetString(id))
 	}
 }
 

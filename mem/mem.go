@@ -28,7 +28,7 @@ func init() {
 	food_stock = make(map[int]*int32)
 	food_lock = make(map[int]*sync.Mutex)
 
-	carts = make(map[int]*string)
+	// carts = make(map[int]*string)
 	login_rets = make(map[int]*string)
 }
 
