@@ -115,7 +115,7 @@ func InitFoodsFromPersist() {
 		all_food_static_string = string(ret)
 	}
 	generateStaticFoods()
-	// spreadFoods()
+	spreadFoods()
 	go RefreshFoodList()
 }
 
